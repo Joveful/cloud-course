@@ -5,3 +5,4 @@ dock/getting-started-todo-app
 dock/task3-4/sample_python/
 terraform-gcp/credentials.json
 tf-python/credentials.json
+terraform-gcp/.terraform
