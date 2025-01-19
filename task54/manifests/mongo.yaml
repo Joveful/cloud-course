@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongo   # Do not change this name
+spec:
+  ports:
+  - nodePort: 31048
+    port: 27017
+    protocol: TCP
+    targetPort: 27017
+  type: NodePort
+  selector:
+    app: mongo
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongo   # Do not change this name
+  labels:
+    app: mongo
+spec:
+  selector:
+    matchLabels:
+      app: mongo
+  template:
+    metadata:
+      labels:
+        app: mongo
+    spec:
+      containers:
+      - name: mongo
+        image: mongo:6.0.6
+        imagePullPolicy: Never
+        ports:
+          - containerPort: 27017
+            protocol: TCP
+        volumeMounts:   # Do not edit this section
+          - name: mongo-persistent-storage
+            mountPath: /var/lib/mongo
+      volumes:    # Do not edit this section
+        - name: mongo-persistent-storage
+          persistentVolumeClaim:
+            claimName: mongo-pv-claim

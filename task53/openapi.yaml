@@ -1,0 +1,199 @@
+openapi: 3.0.0
+info:
+  title: Some cringe books
+  version: 1.0.1
+servers:
+  - url: "https://someoapiserver.com"
+paths:
+  /book:
+    post:
+      tags:
+      - book
+      summary: post a book
+      requestBody:
+        description: add a book
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Book'
+      responses:
+        '201':
+          description: Successful op
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+        '422':
+          description: Unprocessable entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: default error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /books:
+    get:
+      parameters:
+        - in: query
+          name: author
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Book'
+          description: name of the author
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Book'
+        '404':
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: default error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /book/{book_id}:
+    get:
+      summary: get book by id
+      parameters:
+        - in: path
+          name: book_id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+        '404':
+          description: not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: default error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      summary: put book by id
+      parameters:
+        - in: path
+          name: book_id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+        default:
+          description: default error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '422':
+          description: Unprocessable entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      summary: delete book by id
+      parameters:
+        - in: path
+          name: book_id
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: successful operation
+        default:
+          description: default error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    Book:
+      type: object
+      required:
+        - name
+        - author
+        - isbn
+        - rating
+        - publish_date
+      properties:
+        book_id:
+          readOnly: true
+        name:
+          type: string
+          maximum: 50
+        author:
+          type: string
+          maximum: 50
+        isbn:
+          type: string
+          maximum: 13
+          minimum: 13
+        rating:
+          type: integer
+          minimum: 0
+          maximum: 5
+        publish_date:
+          type: string
+          format: date-time
+    Books:
+      type: array
+      items:
+        $ref: '#/components/schemas/Book'
+    Success:
+      type: object
+      properties:
+        message:
+          type: string
+        id:
+          type: string
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
