@@ -7,7 +7,7 @@ def run():
     with grpc.insecure_channel("localhost:50051") as channel:
         stub = restaurant_pb2_grpc.RestaurantStub(channel)
         response = stub.FoodOrder(
-            restaurant_pb2.RestaurantRequest(orderID="69", items=["cock", "dick"])
+            restaurant_pb2.RestaurantRequest(orderID="69", items=["notin", "menu"])
         )
         print("Restaurnat client received: " + str(response.status))
 
